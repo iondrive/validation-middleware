@@ -1,0 +1,21 @@
+{
+    "version": "1.5.0-beta",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "noLib": false,
+        "outDir": "./lib/"
+    },
+    "compileOnSave": true,
+    "filesGlob": [
+        "./typings/tsd.d.ts",
+        "./src/**/*.ts"
+    ],
+    "files": [
+        "./typings/tsd.d.ts",
+        "./src/validator.ts"
+    ]
+}
