@@ -23,7 +23,8 @@
   "files": [
     "LICENSE",
     "README.md",
-    "lib/"
+    "lib/",
+    "definition/"
   ],
   "scripts": {
     "build": "tsglob && tsc",
