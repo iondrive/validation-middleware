@@ -1,7 +1,7 @@
 {
   "name": "@iondrive/validation-middleware",
   "description": "A JSON Schema validation middleware",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Ben Shepheard <ben@iondrive.co.uk>",
   "license": "MIT",
   "repository": "iondrive/validator-middleware",
