@@ -4,24 +4,24 @@ var bodyParser = require('body-parser');
 var express = require('express');
 var request = require('@iondrive/supertest');
 
-var validator = require('../');
+var validate = require('../');
 
-validator.addFormat('only-a', /^a+$/);
-validator.addFormat('abc', /abc/);
+validate.addFormat('only-a', /^a+$/);
+validate.addFormat('abc', /abc/);
 
-validator.addSchema('nickname', {
+validate.addSchema('nickname', {
   type: 'string',
   pattern: /^[a-z]{2,8}$/
 });
 
-describe('validator-middleware', function () {
+describe('validation-middleware', function () {
 
   describe('body', function () {
     var app = express();
     app.use(bodyParser.json());
 
     app.post('/',
-      validator.body({
+      validate.body({
         type: 'object',
         properties: {
           name: {
@@ -37,6 +37,14 @@ describe('validator-middleware', function () {
         res.end(req.body.name + ':' + req.body.age);
       }
     );
+
+    app.use(function (err, req, res, next) {
+      if (err instanceof validate.ValidationError) {
+        res.status(400).send({
+          errors: err.errors
+        });
+      }
+    });
 
     it('should accept valid body', function (done) {
       request(app)
@@ -84,7 +92,7 @@ describe('validator-middleware', function () {
     var app = express();
 
     app.get('/',
-      validator.query({
+      validate.query({
         type: 'object',
         properties: {
           name: {
@@ -100,6 +108,14 @@ describe('validator-middleware', function () {
         res.end(req.query.name + ':' + req.query.age);
       }
     );
+
+    app.use(function (err, req, res, next) {
+      if (err instanceof validate.ValidationError) {
+        res.status(400).send({
+          errors: err.errors
+        });
+      }
+    });
 
     it('should accept valid query', function (done) {
       request(app)
@@ -122,7 +138,7 @@ describe('validator-middleware', function () {
     var app = express();
 
     app.get('/:name/:age',
-      validator.params({
+      validate.params({
         type: 'object',
         properties: {
           name: {
@@ -139,6 +155,14 @@ describe('validator-middleware', function () {
         res.end(req.params.name + ':' + req.params.age);
       }
     );
+
+    app.use(function (err, req, res, next) {
+      if (err instanceof validate.ValidationError) {
+        res.status(400).send({
+          errors: err.errors
+        });
+      }
+    });
 
     it('should accept valid params', function (done) {
       request(app)
@@ -162,7 +186,7 @@ describe('validator-middleware', function () {
     app.use(bodyParser.json());
 
     app.post('/',
-      validator.body({
+      validate.body({
         type: 'object',
         properties: {
           a: {
@@ -179,6 +203,14 @@ describe('validator-middleware', function () {
         res.end(req.body.a + ':' + req.body.abc);
       }
     );
+
+    app.use(function (err, req, res, next) {
+      if (err instanceof validate.ValidationError) {
+        res.status(400).send({
+          errors: err.errors
+        });
+      }
+    });
 
     it('should accept valid body', function (done) {
       request(app)
@@ -206,7 +238,7 @@ describe('validator-middleware', function () {
     app.use(bodyParser.json());
 
     app.post('/',
-      validator.body({
+      validate.body({
         type: 'object',
         properties: {
           nickname: {
@@ -218,6 +250,14 @@ describe('validator-middleware', function () {
         res.end(req.body.nickname);
       }
     );
+
+    app.use(function (err, req, res, next) {
+      if (err instanceof validate.ValidationError) {
+        res.status(400).send({
+          errors: err.errors
+        });
+      }
+    });
 
     it('should accept valid body', function (done) {
       request(app)

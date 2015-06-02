@@ -1,7 +1,7 @@
 declare module '@iondrive/validation-middleware' {
   import express = require('express');
 
-  export interface JsonSchema {
+  interface JsonSchema {
     // number keywords
     multipleOf?: number;
     maximum?: number;
@@ -48,10 +48,22 @@ declare module '@iondrive/validation-middleware' {
     format?: string;
   }
 
-  export function addFormat(name: string, format: string | RegExp): void;
-  export function addSchema(name: string, schema: JsonSchema): void;
+  function addFormat(name: string, format: string | RegExp): void;
+  function addSchema(name: string, schema: JsonSchema): void;
 
-  export function body(schema: JsonSchema): express.RequestHandler;
-  export function query(schema: JsonSchema): express.RequestHandler;
-  export function params(schema: JsonSchema): express.RequestHandler;
+  interface IsMyJsonValidError {
+    field: string;
+    message: string;
+    value?: any;
+  }
+
+  class ValidationError implements Error {
+    public name: string;
+    public message: string;
+    public errors: IsMyJsonValidError[];
+  }
+
+  function body(schema: JsonSchema): express.RequestHandler;
+  function query(schema: JsonSchema): express.RequestHandler;
+  function params(schema: JsonSchema): express.RequestHandler;
 }

@@ -1,4 +1,4 @@
-interface ValidatorOptions {
+interface IsMyJsonValidOptions {
   formats?: {
     [name: string]: RegExp
   };
@@ -9,7 +9,7 @@ interface ValidatorOptions {
   greedy?: boolean;
 }
 
-interface ValidationError {
+interface IsMyJsonValidError {
   field: string;
   message: string;
   value?: any;
@@ -17,11 +17,11 @@ interface ValidationError {
 
 interface Validator {
   (data: {}): boolean;
-  errors: ValidationError[]
+  errors: IsMyJsonValidError[]
 }
 
 declare module 'is-my-json-valid' {
-  function validator(schema: {}, options?: ValidatorOptions): Validator;
+  function validator(schema: {}, options?: IsMyJsonValidOptions): Validator;
 
   export = validator;
 }

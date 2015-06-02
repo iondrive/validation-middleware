@@ -12,6 +12,15 @@ export function addSchema(name: string, schema: {}) {
   schemas[name] = schema;
 }
 
+export class ValidationError implements Error {
+  public name = 'ValidationError';
+  public message: string;
+
+  constructor(public errors: IsMyJsonValidError[]) {
+    this.message = `Validation failed with ${errors.length} error${errors.length === 1 ? '' : 's'}. See the \'errors\' property for details.`;
+  }
+}
+
 function makeMiddleware(field: string) {
   return function (schema: {}) {
     var validate = validator(schema, {
@@ -23,12 +32,10 @@ function makeMiddleware(field: string) {
     return <express.RequestHandler>function (req, res, next) {
       if (validate((<any>req)[field])) return next();
 
-      res.status(400).send({
-        errors: validate.errors.map(function (error) {
-          error.field = error.field.replace(/^data./, '');
-          return error;
-        })
-      });
+      next(new ValidationError(validate.errors.map(function (error) {
+        error.field = error.field.replace(/^data./, '');
+        return error;
+      })));
     };
   }
 }

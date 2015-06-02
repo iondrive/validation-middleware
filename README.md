@@ -33,6 +33,14 @@ app.get('/greeting', validate.body(greetingSchema), function (req, res) {
   res.send('Hello there ' + req.body.name + '!');
 });
 
+app.use(function (err, req, res, next) {
+  if (err instanceof validate.ValidationError) {
+    res.status(400).send({
+      errors: err.errors
+    });
+  }
+});
+
 app.listen(3000);
 ```
 
